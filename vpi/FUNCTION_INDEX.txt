@@ -1,0 +1,87 @@
+
+$pkt_ethernet( pkt     [ 7:0][0:1024]
+             , bnum_pkt    [15:0] // num of bytes of the whole packet
+             , mac_src [47:0]
+             , mac_dst [47:0]
+             , type_len[15:0]
+             , bnum_payload[15:0] // num of bytes of payload
+             , payload     [ 7:0][0:1024]
+             , add_crc      // add CRC at the end of the packet
+             , add_preamble // add PREAMBLE at the beginning of the packet
+             );
+
+$pkt_ip( pkt     [ 7:0][0:1024]
+       , bnum_pkt    [15:0] // num of bytes of the whole packet
+       , ip_src  [31:0]
+       , ip_dst  [31:0]
+       , protocol[ 7:0]
+       , ttl     [ 7:0]
+       , bnum_payload[15:0] // num of bytes of payload
+       , payload     [ 7:0][0:1024]
+       );
+
+$pkt_udp( pkt     [ 7:0][0:1024]
+        , bnum_pkt    [15:0] // num of bytes of the whole packet
+        , port_src[15:0]
+        , port_dst[15:0]
+        , bnum_payload[15:0] // num of bytes of payload
+        , payload     [ 7:0][0:1024]
+        );
+
+$pkt_tcp( pkt[7:0][0:1023] // output
+        , bnum_pkt[15:0] // output
+        , port_src[15:0] // input
+        , port_dst[15:0] // input
+        , seq_num[31:0] // input
+        , ack_num[31:0] // input
+        , bnum_payload[15:0] // input
+        , payload[7:0][0:1023] // input
+        );
+
+$msg_ptpv2( pkt             [ 7:0][0:1024]
+          , bnum_pkt        [15:0] // num of bytes of the whole message
+          , messageType     [ 3:0]
+          , secondsField    [47:0]
+          , nanosecondsField[31:0]
+          , sequenceID      [15:0]
+          );
+
+// make PTPv2 over ethernet
+$msg_ptpv2_ethernet ( pkt               [ 7:0][0:1024*4-1]
+                    , bnum_pkt          [15:0] // num of bytes of the whole message
+                    , mac_src           [47:0]
+                    , messageType       [ 3:0]
+                    , flagField         [15:0]
+                    , correctionField   [63:0]
+                    , sourcePortIdentity[79:0]
+                    , sequenceID        [15:0]
+                    , secondsField      [47:0]
+                    , nanosecondsField  [31:0]
+                    , reqClockId        [79:0]
+                    , add_crc
+                    , add_preamble
+                    );
+
+// make PTPv2 over udp/ip/ethernet
+$msg_ptpv2_udp_ip_ethernet ( pkt               [7:0][0:1024*4-1]
+                           , bnum_pkt          [15:0] // num of bytes of the whole message
+                           , mac_src           [47:0]
+                           , ip_src            [31:0]
+                           , messageType       [ 3:0]
+                           , flagField         [15:0]
+                           , correctionField   [63:0]
+                           , sourcePortIdentity[79:0]
+                           , sequenceID        [15:0]
+                           , secondsField      [47:0]
+                           , nanosecondsField  [31:0]
+                           , reqClockId        [79:0]
+                           , add_crc      //
+                           , add_preamble //
+                           );
+
+// parsing packet
+$pkt_ethernet_parser( pkt     [ 7:0][0:1024]
+                    , leng    [15:0]
+                    , crc
+                    , preamble
+                    );

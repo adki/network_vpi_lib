@@ -1,0 +1,48 @@
+
+[Linux/MinGW/Cygwin case]
+1. Go to 'vpi' directory
+   $ cd vpi
+2. Run 'make'
+   $ make clean
+   $ make
+3. Run 'make install'
+   $ make install
+4. Go to 'vpi_test' directory
+   $ cd ../vpi_test
+5. Run 'make'
+   $ make clean
+   $ make
+6. Check wave
+   (it may not have any meaningul wave, since it just prepares packet data)
+   $ gtkwave wave.vcd
+
+[Visual Studio case]
+1. Go to 'vpi' directory
+   > cd vpi
+2. Build Visual Studio environment
+   > WIN_RUN.bat
+3. Compilation
+   > nmake -f NMAKEFILE
+4. Installation
+   > nmake -f NMAKEFILE install
+5. Go to 'vpi_test' directory
+   > cd ..\vpi_test
+6. Simulation
+   > RunMe.bat
+7. Check wave
+   (it may not have any meaningul wave, since it just prepares packet data)
+   > gtkwave wave.vcd
+
+================================================================
+Resulting VPI libraries for ModelSim/QuestaSim
+
+   * for Linux
+   vpi_lib/modelsim/10.3/linux_x86_64/libnetwork_vpi.so
+
+   * for Cygwin or MinGW
+   vpi_lib/modelsim/10.3/mingw_x86_64/network_vpi.dll
+
+   * for Visual Studio
+   vpi_lib/modelsim/10.3/MS64/network_vpi.dll <==64-bit case>
+   vpi_lib/modelsim/10.3/MS32/network_vpi.dll <==32-bit case>
+

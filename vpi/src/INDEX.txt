@@ -1,0 +1,192 @@
+
+network_vpi_library.c        VPI routines
+
+eth_ip_udp_tcp_data_type.h   Ethernet/IP/UDP/TCP related data types
+eth_ip_udp_tcp_pkt.c         Etherent/IP/UDP/TCP routines
+eth_ip_udp_tcp_pkt.h         Etherent/IP/UDP/TCP routines
+
+ptpv2_etc.h                  Macros about print message
+ptpv2_context.h              PTPv2 related context data type
+ptpv2_type.h                 PTPv2 related data types
+ptpv2_message.c              PTPv2 message routines
+ptpv2_message.h              PTPv2 message routines
+
+-------------------------------------------------------------
+VPI routines, i.e., tasks for Verilog
+
+$pkt_ethernet( pkt     [7:0][0:4095]
+             , bnum_pkt[15:0] // num of bytes of the whole packet
+             , mac_src [47:0]
+             , mac_dst [47:0]
+             , type_len[15:0]
+             , bnum_payload[15:0] // num of bytes of payload
+             , payload [7:0][0:4095]
+             , add_crc      //
+             , add_preamble //
+             );
+
+$pkt_ip( pkt     [7:0][0:4095]
+       , bnum_pkt[15:0] // num of bytes of the whole packet
+       , ip_src  [31:0]
+       , ip_dst  [31:0]
+       , protocol[ 7:0]
+       , ttl     [ 7:0]
+       , bnum_payload[15:0] // num of bytes of payload
+       , payload [7:0][0:4095]
+       , tcp_check // update TCP header checksum when it is 1 and 'protocol' is 0x06.
+       );
+
+$pkt_udp( pkt     [7:0][0:4095]
+        , bnum_pkt[15:0] // num of bytes of the whole packet
+        , port_src[15:0]
+        , port_dst[15:0]
+        , bnum_payload[15:0] // num of bytes of payload
+        , payload     [7:0][0:4095]
+        );
+
+$pkt_tcp( pkt[7:0][0:4095] // output
+        , bnum_pkt[15:0] // output
+        , port_src[15:0] // input
+        , port_dst[15:0] // input
+        , seq_num[31:0] // input
+        , ack_num[31:0] // input
+        , bnum_payload[15:0] // input
+        , payload[7:0][0:4095] // input
+        );
+
+// make IP over ethernet
+$pkt_ip_ethernet( pkt     [7:0][0:4095]
+       , bnum_pkt[15:0] // num of bytes of the whole packet
+       , ip_src  [31:0]
+       , ip_dst  [31:0]
+       , protocol[ 7:0]
+       , ttl     [ 7:0]
+       , tcp_check // update TCP header checksum when it is 1 and 'protocol' is 0x06.
+       , mac_src [47:0]
+       , mac_dst [47:0]
+       , type_len[15:0]
+       , bnum_payload[15:0] // num of bytes of payload
+       , payload [7:0][0:4095]
+       , add_crc      //
+       , add_preamble //
+       );
+
+// make UDP over IP
+$pkt_udp_ip( pkt     [7:0][0:4095]
+        , bnum_pkt[15:0] // num of bytes of the whole packet
+        , port_src[15:0]
+        , port_dst[15:0]
+        , ip_src  [31:0]
+        , ip_dst  [31:0]
+        , ttl     [ 7:0]
+        , bnum_payload[15:0] // num of bytes of payload
+        , payload [7:0][0:4095]
+        );
+
+// make TCP over IP
+$pkt_tcp_ip( pkt[7:0][0:4095] // output
+        , bnum_pkt[15:0] // output
+        , port_src[15:0] // input
+        , port_dst[15:0] // input
+        , seq_num[31:0] // input
+        , ack_num[31:0] // input
+        , ip_src  [31:0]
+        , ip_dst  [31:0]
+        , ttl     [ 7:0]
+        , bnum_payload[15:0] // num of bytes of payload
+        , payload [7:0][0:4095]
+        );
+
+// It build an UDP/IP over Ethernet packet on 'pkt[][]'
+// using 'payload[][]' that contains pure UDP payload.
+$pkt_udp_ip_ethernet( pkt     [7:0][0:4095]
+        , bnum_pkt[15:0] // num of bytes of the whole packet
+        , port_src[15:0]
+        , port_dst[15:0]
+        , ip_src  [31:0]
+        , ip_dst  [31:0]
+        , ttl     [ 7:0]
+        , mac_src [47:0]
+        , mac_dst [47:0]
+        , bnum_payload[15:0] // num of bytes of payload
+        , payload [7:0][0:4095]
+        , add_crc      //
+        , add_preamble //
+        );
+
+// make TCP/IP over Ethernet
+$pkt_tcp_ip_ethernet( pkt[7:0][0:4095] // output
+        , bnum_pkt[15:0] // output
+        , port_src[15:0] // input
+        , port_dst[15:0] // input
+        , seq_num[31:0] // input
+        , ack_num[31:0] // input
+        , ip_src  [31:0]
+        , ip_dst  [31:0]
+        , ttl     [ 7:0]
+        , mac_src [47:0]
+        , mac_dst [47:0]
+        , bnum_payload[15:0] // num of bytes of payload
+        , payload [7:0][0:4095]
+        , add_crc      //
+        , add_preamble //
+        , bnum_payload[15:0] // num of bytes of payload
+        , payload [7:0][0:4095]
+        );
+
+// make PTPV2 context
+$msg_ptpv2_context( ptp_version
+                  , ptp_domain
+                  , one_step_clock
+                  , unicast_port
+                  , profile_spec1
+                  , profile_spec2
+                  );
+
+$msg_ptpv2( pkt             [7:0][0:4095]
+          , bnum_pkt        [15:0] // num of bytes of the whole message
+          , messageType     [3:0]
+          , secondsField    [47:0]
+          , nanosecondsField[31:0]
+          , sequenceID      [15:0]
+          );
+
+// make PTPv2 over ethernet
+$msg_ptpv2_ethernet ( pkt               [ 7:0][0:1024*4-1]
+                    , bnum_pkt          [15:0] // num of bytes of the whole message
+                    , mac_src           [47:0]
+                    , messageType       [ 3:0]
+                    , flagField         [15:0]
+                    , correctionField   [63:0]
+                    , sourcePortIdentity[79:0]
+                    , sequenceID        [15:0]
+                    , secondsField      [47:0]
+                    , nanosecondsField  [31:0]
+                    , reqClockId        [79:0]
+                    , add_crc
+                    , add_preamble
+                    );
+
+// make PTPv2 over udp/ip/ethernet
+$msg_ptpv2_udp_ip_ethernet ( pkt               [7:0][0:1024*4-1]
+                           , bnum_pkt          [15:0] // num of bytes of the whole message
+                           , mac_src           [47:0]
+                           , ip_src            [31:0]
+                           , messageType       [ 3:0]
+                           , flagField         [15:0]
+                           , correctionField   [63:0]
+                           , sourcePortIdentity[79:0]
+                           , sequenceID        [15:0]
+                           , secondsField      [47:0]
+                           , nanosecondsField  [31:0]
+                           , reqClockId        [79:0]
+                           , add_crc      //
+                           , add_preamble //
+                           );
+
+// parsing packet
+$pkt_ethernet_parser( pkt     [ 7:0][0:4095]
+                    , bnum_pkt[15:0]
+                    , crc
+                    , preamble
+                    );

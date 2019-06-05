@@ -1,0 +1,51 @@
+
+# define macros
+TARGET_DLL = network_vpi.dll
+DIR_SRC = src
+DIR_INCLUDE = src
+DIR_OBJ = obj
+SRC_FILES = $(DIR_SRC)/network_vpi_lib.c\
+            $(DIR_SRC)/eth_ip_udp_tcp_pkt.c\
+            $(DIR_SRC)/ptpv2_message.c
+OBJ_FILES = $(DIR_OBJ)/network_vpi_lib.obj\
+            $(DIR_OBJ)/eth_ip_udp_tcp_pkt.obj\
+            $(DIR_OBJ)/ptpv2_message.obj
+CDEFINES =
+CFLAGS = $(CDEFINES) -EHsc -Isrc -Ic:/questasim64_10.3/include
+!IF "$(MACH)" == "x86"
+LFLAGS =
+LIBPLI = c:/questasim64_10.3/win32/mtipli.lib
+DIR_INSTALL = ../vpi_lib/modelsim/10.3/MS32
+!ELSE IF "$(MACH)" == "x64"
+LFLAGS =
+LIBPLI = c:/questasim64_10.3/win64/mtipli.lib
+DIR_INSTALL = ../vpi_lib/modelsim/10.3/MS64
+!ENDIF
+
+# 
+all: compile dynamic
+
+compile:
+	@if not exist $(DIR_OBJ) mkdir $(DIR_OBJ)
+	cl -c $(CFLAGS) -Fo:$(DIR_OBJ)/network_vpi_lib.obj    $(DIR_SRC)/network_vpi_lib.c
+	cl -c $(CFLAGS) -Fo:$(DIR_OBJ)/eth_ip_udp_tcp_pkt.obj $(DIR_SRC)/eth_ip_udp_tcp_pkt.c
+	cl -c $(CFLAGS) -Fo:$(DIR_OBJ)/ptpv2_message.obj      $(DIR_SRC)/ptpv2_message.c
+
+dynamic:
+	link $(LFLAGS) /dll /out:$(TARGET_DLL) $(OBJ_FILES) $(LIBPLI)
+
+#dumpbin -exports $(TARGET_LIB)
+#dumpbin -headers $(TARGET_LIB) | grep machine
+#lib -list $(TARGET_LIB)
+
+install:
+	@if not exist $(DIR_INSTALL:/=\) mkdir $(DIR_INSTALL:/=\)
+	copy $(TARGET_DLL) $(DIR_INSTALL:/=\)\$(TARGET_DLL)
+
+clean:
+	@if exist $(DIR_OBJ:/=\)  rmdir /Q/S $(DIR_OBJ:/=\)
+	@if exist $(TARGET_DLL)   del   /Q   $(TARGET_DLL)
+
+cleanup clobber: clean
+
+cleanupall: cleanup

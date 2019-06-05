@@ -1,0 +1,4 @@
+
+Makefile        for GCC
+NMAKEFILE       for Visual Studio
+WIN_RUN.bat     To setup Windows environment

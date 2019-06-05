@@ -1,0 +1,11 @@
+doc/         Document
+vpi/         VPI routines
+vpi_lib/     By product from 'vpi/Makefile install'
+vpi_test/    Testing VPI routines with Verilog test-bench
+lib_test/    Testing Ethernet routines
+             - IP header checksum, UDP packet checksum, TCP packet checksum
+             - Ethernet FCS
+
+Note that GCC does not support '-mno-cygwin' option
+- use i686-pc-mingw32-gcc'
+- or 32-bit MinGW instead of Cygwin and run the design in MinGW
