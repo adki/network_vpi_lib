@@ -1,6 +1,8 @@
 # Network VPI Library
 '**Network VPI Library**' is a collection of VPI (Verilog Programming Interface) tasks that handles network packets, which include Ethernet, IP, UDP, TCP and PTPv2.
 
+![VPI Interface](./doc/vpi-interface.png "vpi interface")
+
 ## License
 This is licensed with the 2-clause BSD license to make the program and library useful in open and closed source products independent of their licensing scheme.
 
@@ -32,7 +34,7 @@ reg [ 7:0] pkt_eth[0:4095];
           mac_src=48'h02_12_34_56_78_9A;
           mac_dst=48'h02_11_22_33_44_55;
           for (idx=0; idx<4096; idx=idx+1) payload[idx] = idx;
-          type_len=0; // 0 menas use 'bnum_payload'
+          type_len=0; // 0 means to use 'bnum_payload'
           bnum_payload = 10;
           type_len = bnum_payload;
           add_crc = 0;
